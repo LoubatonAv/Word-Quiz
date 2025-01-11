@@ -130,7 +130,7 @@ const VocabularyGame = () => {
               className={`p-4 bg-white border-2 ${
                 isMatched(item.text) ? "border-green-500" : "border-gray-200"
               } ${
-                selectedItem?.text === item.text ? "bg-blue-200" : ""
+                selectedItem?.text === item.text ? "bg-gray-200" : ""
               } rounded-lg shadow-sm cursor-pointer text-center min-w-[200px]`}
             >
               <span className="text-lg">{item.text}</span>
@@ -159,7 +159,7 @@ const VocabularyGame = () => {
               className={`p-4 bg-white border-2 ${
                 isMatched(item.text) ? "border-green-500" : "border-gray-200"
               } ${
-                selectedItem?.text === item.text ? "bg-blue-200" : ""
+                selectedItem?.text === item.text ? "bg-gray-200" : ""
               } rounded-lg shadow-sm cursor-pointer text-center min-w-[200px]`}
             >
               <span className="text-lg">{item.text}</span>
