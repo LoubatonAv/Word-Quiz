@@ -85,6 +85,10 @@ const VocabularyGame = () => {
       setMatches(
         (prev) => new Set([...prev, itemToMatch.text, targetItem.text])
       );
+    } else {
+      // Remove colors if no match
+      setSelectedItem(null);
+      setDraggedItem(null);
     }
 
     setDraggedItem(null);
@@ -99,6 +103,10 @@ const VocabularyGame = () => {
       handleDrop(item); // Reuse drop logic for clicks
     }
   };
+
+  useEffect(() => {
+    console.log("matches", selectedItem);
+  }, [selectedItem]);
 
   const isMatched = (text) => matches.has(text);
 
@@ -130,11 +138,11 @@ const VocabularyGame = () => {
               onDrop={() => handleDrop(item)}
               onClick={() => handleItemClick(item)}
               className={`p-4 bg-white border-2 ${
-                isMatched(item.text) ? "border-green-500" : "border-gray-200"
-              } ${
-                selectedItem?.text === item.text
-                  ? "bg-gray-200 border-blue-500"
-                  : ""
+                isMatched(item.text)
+                  ? "border-green-500"
+                  : selectedItem?.text === item.text
+                  ? "border-blue-500"
+                  : "border-gray-200"
               } rounded-lg shadow-sm cursor-pointer text-center min-w-[200px]`}
             >
               <span className="text-lg">{item.text}</span>
@@ -161,9 +169,11 @@ const VocabularyGame = () => {
               onDrop={() => handleDrop(item)}
               onClick={() => handleItemClick(item)}
               className={`p-4 bg-white border-2 ${
-                isMatched(item.text) ? "border-green-500" : "border-gray-200"
-              } ${
-                selectedItem?.text === item.text ? "bg-gray-200" : ""
+                isMatched(item.text)
+                  ? "border-green-500"
+                  : selectedItem?.text === item.text
+                  ? "border-blue-500"
+                  : "border-gray-200"
               } rounded-lg shadow-sm cursor-pointer text-center min-w-[200px]`}
             >
               <span className="text-lg">{item.text}</span>
