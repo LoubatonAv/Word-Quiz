@@ -36,11 +36,13 @@ const VocabularyGame = () => {
       );
       const pagePairs = vocabularyPairs.slice(pageStart, pageEnd);
 
-      // Create separate arrays for words and translations
-      const words = pagePairs.map((pair) => ({
-        text: pair.word,
-        type: "word",
-      }));
+      // Shuffle words and translations
+      const words = shuffleArray(
+        pagePairs.map((pair) => ({
+          text: pair.word,
+          type: "word",
+        }))
+      );
       const translations = shuffleArray(
         pagePairs.map((pair) => ({
           text: pair.translation,
@@ -130,7 +132,9 @@ const VocabularyGame = () => {
               className={`p-4 bg-white border-2 ${
                 isMatched(item.text) ? "border-green-500" : "border-gray-200"
               } ${
-                selectedItem?.text === item.text ? "bg-gray-200" : ""
+                selectedItem?.text === item.text
+                  ? "bg-gray-200 border-blue-500"
+                  : ""
               } rounded-lg shadow-sm cursor-pointer text-center min-w-[200px]`}
             >
               <span className="text-lg">{item.text}</span>
