@@ -11,6 +11,12 @@ function shuffleArray(array) {
   return shuffled;
 }
 
+// Function to get random items from array
+function getRandomItems(array, count) {
+  const shuffled = shuffleArray([...array]);
+  return shuffled.slice(0, count);
+}
+
 const VocabularyGame = () => {
   const itemsPerPage = 10;
   const [pages, setPages] = useState([]);
@@ -26,27 +32,34 @@ const VocabularyGame = () => {
   const initializeGame = () => {
     const totalPages = Math.ceil(vocabularyPairs.length / itemsPerPage);
     const newPages = [];
+    const usedPairs = new Set();
 
-    // Split vocabulary pairs into pages
+    // Create pages with random selections
     for (let i = 0; i < totalPages; i++) {
-      const pageStart = i * itemsPerPage;
-      const pageEnd = Math.min(
-        pageStart + itemsPerPage,
-        vocabularyPairs.length
+      // Filter out already used pairs
+      const availablePairs = vocabularyPairs.filter(
+        (pair) => !usedPairs.has(pair.id)
       );
-      const pagePairs = vocabularyPairs.slice(pageStart, pageEnd);
+
+      // Get random pairs for this page
+      const pagePairs = getRandomItems(availablePairs, itemsPerPage);
+
+      // Mark these pairs as used
+      pagePairs.forEach((pair) => usedPairs.add(pair.id));
 
       // Shuffle words and translations
       const words = shuffleArray(
         pagePairs.map((pair) => ({
           text: pair.word,
           type: "word",
+          id: pair.id,
         }))
       );
       const translations = shuffleArray(
         pagePairs.map((pair) => ({
           text: pair.translation,
           type: "translation",
+          id: pair.id,
         }))
       );
 
@@ -66,7 +79,7 @@ const VocabularyGame = () => {
   const handleDrop = (targetItem) => {
     const itemToMatch = draggedItem || selectedItem;
 
-    if (!itemToMatch || itemToMatch.text === targetItem.text) return;
+    if (!itemToMatch || itemToMatch.id === targetItem.id) return;
 
     // Check if the dropped or clicked items form a correct pair
     const isMatch = vocabularyPairs.some(
@@ -86,7 +99,6 @@ const VocabularyGame = () => {
         (prev) => new Set([...prev, itemToMatch.text, targetItem.text])
       );
     } else {
-      // Remove colors if no match
       setSelectedItem(null);
       setDraggedItem(null);
     }
@@ -97,16 +109,11 @@ const VocabularyGame = () => {
 
   const handleItemClick = (item) => {
     if (!selectedItem) {
-      setSelectedItem(item); // First item is selected
+      setSelectedItem(item);
     } else {
-      // Attempt to match
-      handleDrop(item); // Reuse drop logic for clicks
+      handleDrop(item);
     }
   };
-
-  useEffect(() => {
-    console.log("matches", selectedItem);
-  }, [selectedItem]);
 
   const isMatched = (text) => matches.has(text);
 
@@ -131,7 +138,7 @@ const VocabularyGame = () => {
           </h2>
           {pages[currentPage]?.words.map((item, index) => (
             <div
-              key={`word-${index}`}
+              key={`word-${item.id}-${index}`}
               draggable
               onDragStart={() => handleDragStart(item)}
               onDragOver={(e) => e.preventDefault()}
@@ -162,7 +169,7 @@ const VocabularyGame = () => {
           </h2>
           {pages[currentPage]?.translations.map((item, index) => (
             <div
-              key={`translation-${index}`}
+              key={`translation-${item.id}-${index}`}
               draggable
               onDragStart={() => handleDragStart(item)}
               onDragOver={(e) => e.preventDefault()}
