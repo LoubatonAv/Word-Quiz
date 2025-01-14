@@ -79,8 +79,6 @@ const VocabularyGame = () => {
   const handleDrop = (targetItem) => {
     const itemToMatch = draggedItem || selectedItem;
 
-    if (!itemToMatch || itemToMatch.id === targetItem.id) return;
-
     // Check if the dropped or clicked items form a correct pair
     const isMatch = vocabularyPairs.some(
       (pair) =>
